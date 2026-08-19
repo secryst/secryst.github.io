@@ -1,0 +1,315 @@
+/* secryst.github.io — smoked-quartz dark, candlelight amber.
+   Palette: obsidian umber, candle amber, moonstone blue, ivory. */
+
+:root {
+  --ink: #17110d;          /* page ground: obsidian umber */
+  --ink-raised: #201813;   /* card ground */
+  --ink-orb: #0d0a08;      /* orb depth */
+  --candle: #e8c88a;       /* revelation amber */
+  --candle-dim: #a98d5f;
+  --moonstone: #b7c9d9;    /* cool secondary */
+  --ivory: #efe7da;        /* body text */
+  --ivory-dim: #b9ac99;
+  --rule: #3a2f26;
+  --display: "Cormorant Garamond", "Times New Roman", serif;
+  --body: "Spectral", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--ink); }
+
+body {
+  margin: 0;
+  color: var(--ivory);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.65;
+  background:
+    radial-gradient(1100px 500px at 78% -8%, rgba(232, 200, 138, 0.07), transparent 60%),
+    radial-gradient(900px 600px at 12% 108%, rgba(183, 201, 217, 0.05), transparent 55%),
+    var(--ink);
+}
+
+a { color: var(--moonstone); text-decoration-color: rgba(183,201,217,.4); }
+a:hover { color: var(--candle); }
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 0;
+  text-align: center;
+}
+.wordmark {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--candle-dim);
+}
+.definition {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ivory-dim);
+}
+.pos { font-style: italic; color: var(--candle-dim); margin-right: .35em; }
+
+/* ---------- hero: the scrying act ---------- */
+
+.hero {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem 3rem;
+  text-align: center;
+}
+
+.orb {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto 2.25rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 30%, rgba(232,200,138,.28), rgba(232,200,138,.05) 34%, transparent 55%),
+    radial-gradient(circle at 62% 72%, rgba(183,201,217,.10), transparent 45%),
+    var(--ink-orb);
+  border: 1px solid rgba(232,200,138,.35);
+  box-shadow:
+    0 0 60px rgba(232,200,138,.10),
+    inset 0 0 34px rgba(0,0,0,.85);
+}
+.orb::after {           /* the gaze highlight */
+  content: "";
+  position: absolute;
+  top: 18%; left: 24%;
+  width: 26px; height: 16px;
+  border-radius: 50%;
+  background: rgba(239,231,218,.22);
+  filter: blur(5px);
+  transform: rotate(-18deg);
+}
+.orb-core {
+  position: absolute;
+  inset: 26%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,200,138,.35), transparent 70%);
+  animation: gaze 7s ease-in-out infinite;
+}
+.orb-glyphs {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  color: rgba(239,231,218,.75);
+  opacity: .55;
+  animation: surface 9s ease-in-out infinite;
+}
+
+@keyframes gaze   { 0%,100% { opacity:.45 } 50% { opacity:.95 } }
+@keyframes surface { 0%,100% { opacity:.4 } 50% { opacity:.75 } }
+
+.hero h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+.lede {
+  max-width: 40rem;
+  margin: 1.25rem auto 0;
+  color: var(--ivory-dim);
+  font-size: 1.08rem;
+}
+
+/* the reveals: opaque script above, reading below */
+
+.reveals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 3.25rem;
+}
+.reveal { margin: 0; min-width: 12rem; }
+.reveal .eyebrow { text-align: center; margin-bottom: .9rem; }
+.opaque {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  color: var(--ivory-dim);
+  opacity: .55;
+  filter: blur(0.4px);
+}
+.reading {
+  margin: .35rem 0 0;
+  font-family: var(--display);
+  font-size: 2.3rem;
+  color: var(--candle);
+  text-shadow: 0 0 24px rgba(232,200,138,.25);
+}
+.gloss {
+  margin: .45rem 0 0;
+  font-size: .85rem;
+  font-style: italic;
+  color: var(--ivory-dim);
+  text-align: center;
+}
+
+/* ---------- sections ---------- */
+
+.section {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.75rem 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moonstone);
+  margin: 0 0 .6rem;
+}
+.section h2 {
+  margin: 0 0 1rem;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+.section p { color: var(--ivory); }
+.section p + p { margin-top: .9rem; }
+
+code {
+  font-family: var(--mono);
+  font-size: .88em;
+  background: rgba(232,200,138,.08);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: .08em .35em;
+  color: var(--candle);
+}
+pre {
+  font-family: var(--mono);
+  font-size: .85rem;
+  line-height: 1.6;
+  background: var(--ink-raised);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: .9rem 1.1rem;
+  overflow-x: auto;
+}
+pre code { background: none; border: 0; padding: 0; color: var(--moonstone); }
+
+/* ---------- crystal family cards ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.1rem;
+  margin-top: 1.5rem;
+}
+.card {
+  background: var(--ink-raised);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 1.25rem 1.25rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {                /* each crystal carries its own facet tint */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+}
+.card-ruby ::before { background: linear-gradient(90deg, transparent, #e8c88a, transparent); }
+.card-python::before { background: linear-gradient(90deg, transparent, #b7c9d9, transparent); }
+.card-ts::before { background: linear-gradient(90deg, transparent, #cbb7d9, transparent); }
+.card h3 {
+  margin: .1rem 0 .6rem;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--candle);
+}
+.card pre { margin: 0 0 .7rem; font-size: .78rem; }
+.card p { font-size: .92rem; color: var(--ivory); }
+.card .status {
+  font-family: var(--mono);
+  font-size: .72rem;
+  color: var(--ivory-dim);
+  border-top: 1px dashed var(--rule);
+  padding-top: .6rem;
+  margin: .8rem 0 0;
+}
+
+/* ---------- contract diagram ---------- */
+
+.diagram {
+  margin: 1.5rem 0;
+  color: var(--moonstone);
+  font-size: .8rem;
+  text-align: center;
+}
+
+/* ---------- models table ---------- */
+
+.models {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.25rem;
+}
+.models th {
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--moonstone);
+  text-align: left;
+  padding: .5rem .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.models td {
+  padding: .55rem .75rem;
+  border-bottom: 1px solid rgba(58,47,38,.5);
+  font-size: .95rem;
+}
+.fine { font-size: .85rem; color: var(--ivory-dim); }
+
+/* ---------- motto ---------- */
+
+.motto {
+  margin: 1.75rem 0 0;
+  padding: 1.25rem 1.5rem;
+  border-left: 2px solid var(--candle-dim);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--candle);
+}
+
+/* ---------- footer ---------- */
+
+footer {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 3.5rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-size: .85rem;
+  color: var(--ivory-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb-core, .orb-glyphs { animation: none; }
+}
