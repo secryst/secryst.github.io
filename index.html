@@ -4,120 +4,176 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>secryst — reveal the hidden reading of a script</title>
-<meta name="description" content="Crystal runtimes for neural vocalization, diacritization, and phonemization: local, deterministic, BSD-licensed. Ruby, Python, TypeScript.">
+<meta name="description" content="Crystal runtimes for neural vocalization, diacritization, and G2P: local, deterministic, sha256-verified ONNX models behind the interscript-ml contract. Ruby, Python, TypeScript.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Spectral:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%231e1713' stroke='%23e8c88a' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='4' fill='%23e8c88a' opacity='.35'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235a4fe0'/%3E%3Cstop offset='1' stop-color='%2300b8d9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 2 30 12 16 30 2 12Z' fill='url(%23g)'/%3E%3C/svg%3E">
 </head>
-<body>
+<body data-page="index">
 
-<header class="masthead">
-  <p class="wordmark">secryst</p>
-  <p class="definition"><span class="pos">n.</span> coined from <em>scrying</em> + <em>crystal</em> — to gaze into an opaque script and see its hidden reading.</p>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/"><span class="brand-gem" aria-hidden="true"></span>secryst</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/">Overview</a>
+      <a href="primer.html">Primer</a>
+      <a href="spec.html">Specification</a>
+      <a href="crystals.html">Crystals</a>
+      <a href="models.html">Models</a>
+    </nav>
+  </div>
 </header>
 
-<section class="hero" aria-label="What secryst does">
-  <div class="orb" aria-hidden="true"><div class="orb-core"></div><div class="orb-glyphs" lang="ar" dir="rtl">قدر&ensp;ספר&ensp;ភាសា</div></div>
-  <h1>Reveal the hidden reading<br>of a script.</h1>
-  <p class="lede">The vowels, phonemes, and word boundaries live in the reader&rsquo;s mind &mdash; not on the page. Secryst is a family of local, deterministic runtimes that make a text speak: vocalization, diacritization, grapheme-to-phoneme. No cloud, no LLM, no telemetry.</p>
-
-  <div class="reveals">
-    <figure class="reveal">
-      <figcaption class="eyebrow">Arabic &middot; diacritization</figcaption>
-      <p class="opaque" lang="ar" dir="rtl">قدر</p>
-      <p class="reading" lang="ar" dir="rtl">قَدَر</p>
-      <p class="gloss">qadar — fate, measure</p>
-    </figure>
-    <figure class="reveal">
-      <figcaption class="eyebrow">Hebrew &middot; vocalization</figcaption>
-      <p class="opaque" lang="he" dir="rtl">ספר</p>
-      <p class="reading" lang="he" dir="rtl">סֵפֶר</p>
-      <p class="gloss">sefer — book</p>
-    </figure>
-    <figure class="reveal">
-      <figcaption class="eyebrow">Khmer &middot; phonemization</figcaption>
-      <p class="opaque" lang="km">ភាសា</p>
-      <p class="reading">pheasaea</p>
-      <p class="gloss">language</p>
-    </figure>
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="page-eyebrow">Neural phonology · local &amp; deterministic</p>
+      <h1>Reveal the hidden reading of&nbsp;a&nbsp;script.</h1>
+      <p class="hero-lede">The vowels, phonemes, and word boundaries live in the reader&rsquo;s mind — not on the page. Secryst runs byte-level seq2seq models (ONNX) in-process to recover them: diacritization, vocalization, grapheme-to-phoneme. No cloud, no LLM, no telemetry.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="primer.html">Read the primer</a>
+        <a class="btn btn-ghost" href="spec.html">IMF&nbsp;v1 specification</a>
+      </div>
+    </div>
+    <div class="prism-stage" aria-hidden="true">
+      <svg class="prism-svg" viewBox="0 0 460 300" role="img" aria-label="Opaque script entering a prism and dispersing into its revealed reading">
+        <defs>
+          <linearGradient id="spec1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#5a4fe0"/><stop offset="1" stop-color="#00b8d9"/>
+          </linearGradient>
+          <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#98a2b3"/><stop offset="1" stop-color="#5a4fe0"/>
+          </linearGradient>
+        </defs>
+        <!-- inbound beam carrying opaque glyphs -->
+        <line class="beam-in" x1="10" y1="150" x2="185" y2="150" stroke="url(#beam)" stroke-width="2"/>
+        <text x="14" y="138" font-family="Space Grotesk, sans-serif" font-size="26" fill="#98a2b3">قدر · ספר</text>
+        <text x="14" y="176" font-family="IBM Plex Mono, monospace" font-size="13" fill="#98a2b3">opaque input</text>
+        <!-- the prism -->
+        <path d="M185 92 L262 138 L185 208 Z" fill="#ffffff" stroke="#c7cdd6" stroke-width="1.5"/>
+        <path d="M185 92 L262 138 L185 208 Z" fill="url(#spec1)" opacity="0.14"/>
+        <!-- dispersed spectrum carrying the reading -->
+        <g class="disperse">
+          <line x1="262" y1="138" x2="440" y2="74" stroke="#5a4fe0" stroke-width="2.4"/>
+          <line x1="262" y1="138" x2="448" y2="112" stroke="#6a58ee" stroke-width="2.4"/>
+          <line x1="262" y1="138" x2="450" y2="150" stroke="#7a5cf0" stroke-width="2.4"/>
+          <line x1="262" y1="138" x2="448" y2="188" stroke="#3f8fe8" stroke-width="2.4"/>
+          <line x1="262" y1="138" x2="440" y2="226" stroke="#00b8d9" stroke-width="2.4"/>
+          <text x="330" y="62" font-family="Space Grotesk, sans-serif" font-size="24" fill="#5a4fe0">qa·dar</text>
+          <text x="336" y="104" font-family="Space Grotesk, sans-serif" font-size="24" fill="#6a58ee">se·fer</text>
+          <text x="340" y="144" font-family="Space Grotesk, sans-serif" font-size="24" fill="#7a5cf0">pʰeː·saː</text>
+          <text x="344" y="184" font-family="Space Grotesk, sans-serif" font-size="24" fill="#3f8fe8">tʰaj</text>
+          <text x="350" y="226" font-family="IBM Plex Mono, monospace" font-size="12" fill="#00b8d9">IPA · Latin</text>
+          <text x="270" y="256" font-family="IBM Plex Mono, monospace" font-size="13" fill="#98a2b3">revealed reading</text>
+        </g>
+      </svg>
+    </div>
   </div>
 </section>
 
-<section class="section" id="story">
-  <p class="eyebrow">The scrying stone</p>
-  <h2>One name, one job</h2>
-  <p>Scrying is divination by gazing into an opaque medium &mdash; a crystal &mdash; to see what is concealed. Undiacritized Arabic, nikud-less Hebrew, unvocalized Khmer, unsegmented Thai are exactly such surfaces: the reading exists, the glyphs withhold it. Secryst holds the polished stone to the page.</p>
-  <p>The crystal is an ONNX model you hold in your hand: sha256-verified on load, cached locally, run in-process. Ruby, Python, and TypeScript crystals implement one contract and are diffed against each other on shared golden sets.</p>
-</section>
-
-<section class="section" id="family">
-  <p class="eyebrow">The crystal family</p>
-  <h2>Three crystals, one contract</h2>
-  <div class="cards">
-    <article class="card card-ruby">
-      <h3>Ruby</h3>
-      <pre><code>gem 'secryst'</code></pre>
-      <p>Pure-Ruby inference via ONNX; the original crystal, born here in 2020. The modernized v1 line rides <a href="https://github.com/secryst/secryst/pull/47">PR&#8202;#47</a>.</p>
-      <p class="status">github.com/secryst/secryst</p>
-    </article>
-    <article class="card card-python">
-      <h3>Python</h3>
-      <pre><code>pip install secryst</code></pre>
-      <p>The reference crystal: it generates the golden sets the others are diffed against. Byte-level ByT5 inference, IMF&#8202;v1 loading, verified cache.</p>
-      <p class="status">github.com/secryst/secryst-py</p>
-    </article>
-    <article class="card card-ts">
-      <h3>TypeScript</h3>
-      <pre><code>npm i @secryst/ml onnxruntime-node</code></pre>
-      <p>Node crystal for the interscript-js ecosystem; onnxruntime-node stays an optional peer so index consumers stay light.</p>
-      <p class="status">github.com/secryst/secryst-ts</p>
-    </article>
+<section class="band">
+  <div class="band-inner">
+    <h2>One task, three names</h2>
+    <p class="band-sub">Every secryst model recovers information the writing system withholds. What it&rsquo;s called depends on the script.</p>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Diacritization</h3>
+        <div class="reveal-io">
+          <span class="src" lang="ar" dir="rtl">قدر</span>
+          <span class="dst" lang="ar" dir="rtl">قَدَر</span>
+          <span class="gloss">Arabic · qadar, &ldquo;fate&rdquo;</span>
+        </div>
+        <p>Restore the short vowels (ḥarakāt) omitted by the Arabic script, including word-final case endings.</p>
+      </div>
+      <div class="card">
+        <h3>Vocalization</h3>
+        <div class="reveal-io">
+          <span class="src" lang="he" dir="rtl">ספר</span>
+          <span class="dst" lang="he" dir="rtl">סֵפֶר</span>
+          <span class="gloss">Hebrew · sefer, &ldquo;book&rdquo;</span>
+        </div>
+        <p>Restore nikud for Hebrew, with cantillation marks passed through untouched.</p>
+      </div>
+      <div class="card">
+        <h3>Phonemization (G2P)</h3>
+        <div class="reveal-io">
+          <span class="src" lang="km">ភាសា</span>
+          <span class="dst">pheasaea</span>
+          <span class="gloss">Khmer · &ldquo;language&rdquo;</span>
+        </div>
+        <p>Map graphemes to phonemes for scripts whose orthography encodes the sound only implicitly.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section" id="contract">
-  <p class="eyebrow">The contract</p>
-  <h2>interscript-ml</h2>
-  <p>Standards get descriptive names; crystals get evocative ones. The <a href="https://github.com/interscript/ml-models">interscript-ml contract</a> defines what a hidden reading is &mdash; the <code>models.yaml</code> index, the IMF&#8202;v1 model-zip format (member sha256s verified on load), and the golden sets. Every crystal resolves the same ids, verifies the same checksums, and must reproduce the same outputs.</p>
-  <pre class="diagram" aria-label="architecture">        models.yaml  ·  IMF v1  ·  golden sets
-        ┌──────────────────────────────────────┐
-        │        the interscript-ml contract   │
-        └──────┬───────────┬───────────┬───────┘
-               │           │           │
-          gem secryst  pip secryst  @secryst/ml
-           (Ruby)       (Python)    (TypeScript)</pre>
-  <p>Environment: <code>SECRYST_INDEX</code> (index URL or path) and <code>SECRYST_CACHE</code> (default <code>~/.cache/secryst</code>). Cache hits are re-verified &mdash; a corrupt file never loads silently.</p>
+<section class="band">
+  <div class="band-inner">
+    <h2>Built like infrastructure, not a demo</h2>
+    <p class="band-sub">Three language-identical implementations of one versioned contract, kept honest by shared test vectors.</p>
+    <div class="grid-3">
+      <div class="card">
+        <span class="mono-chip">contract</span>
+        <h3>interscript-ml v1</h3>
+        <p>A versioned <code>models.yaml</code> index and the IMF&nbsp;v1 model-zip format: every artifact sha256-verified on every load. Standards get descriptive names; implementations get evocative ones.</p>
+      </div>
+      <div class="card">
+        <span class="mono-chip">parity</span>
+        <h3>Golden-set diffing</h3>
+        <p>The Python crystal generates golden outputs; Ruby and TypeScript must reproduce them byte-for-byte in CI. A model that behaves differently across runtimes never ships.</p>
+      </div>
+      <div class="card">
+        <span class="mono-chip">independence</span>
+        <h3>Zero lock-in</h3>
+        <p>BSD-licensed crystals with no interscript dependency — usable standalone for TTS front-ends, text normalization, or any G2P need. Related to <a href="https://interscript.org">Interscript</a> by contract, not by captivity.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="section" id="models">
-  <p class="eyebrow">In the index</p>
-  <h2>Models you can scry with</h2>
-  <table class="models">
-    <thead><tr><th>id</th><th>what it reveals</th></tr></thead>
-    <tbody>
-      <tr><td><code>khm-latn-1.0</code></td><td>Khmer text &rarr; Latin reading</td></tr>
-      <tr><td><code>tha-g2p-base</code></td><td>Thai &rarr; IPA phonemes</td></tr>
-      <tr><td><code>tha-g2p-small</code></td><td>Thai &rarr; IPA phonemes (compact)</td></tr>
-      <tr><td><code>heb-diac</code></td><td>Hebrew consonants &rarr; full nikud</td></tr>
-      <tr><td><code>urd-diac</code></td><td>Urdu &rarr; vocalized Urdu</td></tr>
-      <tr><td><code>urd-g2p</code></td><td>Urdu &rarr; phonemes</td></tr>
-    </tbody>
-  </table>
-  <p class="fine">Model ids resolve through the <a href="https://github.com/interscript/ml-models/blob/main/models.yaml">models.yaml index</a>; more families (Arabic diacritization, Persian G2P) are in release preparation.</p>
-</section>
+<section class="band">
+  <div class="band-inner">
+    <h2>Start in your language</h2>
+    <p class="band-sub">Model ids resolve through the index; artifacts download once, verify, and cache. Overrides: <code>SECRYST_INDEX</code>, <code>SECRYST_CACHE</code>.</p>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Ruby</h3>
+        <pre><code>gem 'secryst'
 
-<section class="section" id="interscript">
-  <p class="eyebrow">Relation</p>
-  <h2>Of Interscript, not in it</h2>
-  <p><a href="https://interscript.org">Interscript</a> defines interoperable transliteration maps. But maps assume vocalized input: undiacritized text cannot be transliterated unambiguously. Secryst is the phonological layer underneath &mdash; independent (a crystal serves any TTS or G2P use with zero interscript dependency), related by contract, diffed on goldens.</p>
-  <blockquote class="motto">Interscript defines what a hidden reading is.<br>Secryst is how you reveal it, in-process.</blockquote>
+t = Secryst::Translator.new(
+  model_file: 'khm-latn-byt5.zip')
+t.translate('ភាសា')  # =&gt; "pheasaea"</code></pre>
+        <p><a href="crystals.html#ruby">Crystal reference →</a></p>
+      </div>
+      <div class="card">
+        <h3>Python</h3>
+        <pre><code>pip install secryst
+
+from secryst import Model
+m = Model.load('khm-latn-1.0')
+m.translate('ភាសា')  # =&gt; "pheasaea"</code></pre>
+        <p><a href="crystals.html#python">Crystal reference →</a></p>
+      </div>
+      <div class="card">
+        <h3>TypeScript</h3>
+        <pre><code>npm i @secryst/ml onnxruntime-node
+
+import { load } from '@secryst/ml'
+const m = await load('khm-latn-1.0')
+await m.translate('ភាសা')</code></pre>
+        <p><a href="crystals.html#typescript">Crystal reference →</a></p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <footer>
-  <p>Secryst &middot; a GitHub organization &middot; each crystal carries its license in its repository (BSD-3-Clause / MIT).</p>
-  <p><a href="https://github.com/secryst">github.com/secryst</a></p>
+  <div class="footer-inner">
+    <div><strong style="color:var(--ink)">secryst</strong> · coined from <em>scrying</em> + <em>crystal</em> — to gaze into an opaque script and see its hidden reading.</div>
+    <div>Implements the <a href="spec.html">interscript-ml contract v1</a> · <a href="https://github.com/secryst">GitHub</a> · BSD-3-Clause / MIT per repo</div>
+  </div>
 </footer>
 
 </body>

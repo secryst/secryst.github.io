@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Specification — secryst (interscript-ml contract v1)</title>
+<meta name="description" content="The interscript-ml contract: the models.yaml index schema, the IMF v1 model-zip format, the canonical byte-tokenizer table, and conformance requirements for secryst crystals.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="spec">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/"><span class="brand-gem" aria-hidden="true"></span>secryst</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/">Overview</a>
+      <a href="primer.html">Primer</a>
+      <a href="spec.html">Specification</a>
+      <a href="crystals.html">Crystals</a>
+      <a href="models.html">Models</a>
+    </nav>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="toc" aria-label="On this page">
+    <p class="toc-heading">Specification</p>
+    <ul>
+      <li><a href="#conformance">Conformance</a></li>
+      <li><a href="#index">§1 The models.yaml index</a></li>
+      <li><a href="#resolution">§2 Resolution algorithm</a></li>
+      <li><a href="#imf">§3 IMF v1 model zips</a></li>
+      <li><a href="#tokenizer">§4 Byte tokenizer</a></li>
+      <li><a href="#env">§5 Environment</a></li>
+    </ul>
+  </aside>
+
+  <main class="page">
+    <p class="page-eyebrow">interscript-ml contract · <span class="badge badge-v1">v1</span></p>
+    <h1>Specification</h1>
+    <p>This page normatively defines what every secryst crystal implements: the model index, the artifact format, the tokenizer, and the resolution algorithm. The key words <span class="rfc">MUST</span>, <span class="rfc">MUST NOT</span>, <span class="rfc">SHALL</span>, <span class="rfc">SHOULD</span>, and <span class="rfc">MAY</span> are to be interpreted as described in RFC&nbsp;2119.</p>
+
+    <div class="sec" id="conformance">
+      <h2>Conformance</h2>
+      <p>An implementation conforms to interscript-ml&nbsp;v1 when it:</p>
+      <table>
+        <thead><tr><th>#</th><th>Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>C1</td><td><span class="rfc">MUST</span> resolve model ids against a <code>models.yaml</code> index of <code>version: 1</code>, honoring <code>SECRYST_INDEX</code>.</td></tr>
+          <tr><td>C2</td><td><span class="rfc">MUST</span> verify the whole-artifact sha256 before installation and re-verify every cache hit; a mismatch <span class="rfc">MUST</span> fail loudly.</td></tr>
+          <tr><td>C3</td><td><span class="rfc">MUST</span> verify every <code>.onnx</code> member against the manifest sha256 map on load; members not covered by the manifest <span class="rfc">MUST NOT</span> load.</td></tr>
+          <tr><td>C4</td><td><span class="rfc">MUST</span> implement the byte tokenizer exactly (§4); id sequences <span class="rfc">MUST NOT</span> be treated as raw bytes.</td></tr>
+          <tr><td>C5</td><td><span class="rfc">MUST</span> produce byte-identical outputs to the reference crystal on the shared golden sets.</td></tr>
+          <tr><td>C6</td><td><span class="rfc">SHOULD</span> install artifacts atomically (temp file + rename) so a partial download never masquerades as a model.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec" id="index">
+      <p class="sec-num">§1</p>
+      <h2>The models.yaml index</h2>
+      <p>A single YAML document is the catalog. Model ids are stable public identifiers (e.g. <code>khm-latn-1.0</code>).</p>
+      <p class="code-label">index schema</p>
+      <pre><code>version: 1
+models:
+  &lt;id&gt;:
+    filename: string          # artifact file name
+    url: string               # single-file channel (http(s):// or file://)
+    sha256: string            # whole-artifact digest
+    size: int
+    precision: fp32 | fp16    # default fp32
+    task: string
+    parts:                    # OPTIONAL: split artifacts
+      - url: string
+        sha256: string        # per-part digest, verified as it lands
+        size: int</code></pre>
+      <p>The <code>parts</code> mechanism exists for artifacts exceeding GitHub&rsquo;s 2&nbsp;GiB per-asset cap: parts stream into one file in index order, each verified on arrival; the assembled file is then checked against the entry-level <code>sha256</code> exactly as a single-file model — the cache contract is identical.</p>
+    </div>
+
+    <div class="sec" id="resolution">
+      <p class="sec-num">§2</p>
+      <h2>Resolution algorithm</h2>
+      <p>Every crystal resolves an id identically:</p>
+      <ol>
+        <li>Resolve <code>&lt;id&gt;</code> in <code>models.models</code> of the index. Unknown ids <span class="rfc">MUST</span> raise an error enumerating known ids.</li>
+        <li>If a cached copy exists at <code>&lt;cache&gt;/models/&lt;id&gt;/&lt;filename&gt;</code> whose whole-file sha256 matches, use it — cache hits are re-verified, never trusted blindly.</li>
+        <li>Otherwise download (single URL, or parts in order) to a temporary file in the target directory, verifying digests as data lands.</li>
+        <li>Verify the assembled artifact against the index sha256.</li>
+        <li>Atomically rename into place, then load.</li>
+      </ol>
+    </div>
+
+    <div class="sec" id="imf">
+      <p class="sec-num">§3</p>
+      <h2>IMF v1 model zips</h2>
+      <p>The Interscript Model Format&nbsp;v1 is a zip containing at minimum <code>metadata.yaml</code>, <code>encoder.onnx</code>, and <code>decoder.onnx</code>. Zips <span class="rfc">MUST NOT</span> rely on zip-level integrity; integrity is the manifest&rsquo;s job.</p>
+      <p class="code-label">metadata.yaml</p>
+      <pre><code>format: imf-v1
+tokenizer: bytes
+id: khm-latn-1.0
+task: transliteration
+decoder: plain | kv        # kv iff decoder-kv.onnx is present
+precision: fp32
+opset: 14
+sha256:                     # every .onnx member MUST be covered
+  encoder.onnx: &lt;hex&gt;
+  decoder.onnx: &lt;hex&gt;</code></pre>
+      <p>A conforming loader <span class="rfc">MUST</span> reject: any other <code>format</code>, any <code>tokenizer</code> other than <code>bytes</code> (this runtime family is byte-level only), missing required members, and uncovered or mismatched member digests.</p>
+    </div>
+
+    <div class="sec" id="tokenizer">
+      <p class="sec-num">§4</p>
+      <h2>Byte tokenizer</h2>
+      <table>
+        <thead><tr><th>Concept</th><th>Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Encoding a string</td><td>UTF-8 bytes <code>b</code> → ids <code>b&nbsp;+&nbsp;3</code>, then one trailing <code>eos</code></td></tr>
+          <tr><td>Decoding ids</td><td>stop at <code>eos</code>; skip <code>pad</code>/<code>unk</code>; <code>(id&nbsp;−&nbsp;3)&nbsp;mod&nbsp;256</code> per byte; reassemble as UTF-8</td></tr>
+          <tr><td>Special ids</td><td><code>pad&nbsp;=&nbsp;0</code>, <code>eos&nbsp;=&nbsp;1</code>, <code>unk&nbsp;=&nbsp;2</code></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Warning — the classic silent-garbage bug:</strong> ids are offset by 3 and carry a trailing EOS. Feeding <code>text.bytes</code> directly, or forgetting the EOS, produces plausible-but-wrong outputs that pass shape checks. Interop tests <span class="rfc">MUST</span> cover both encode and decode round-trips, including multi-byte scripts.</p>
+    </div>
+
+    <div class="sec" id="env">
+      <p class="sec-num">§5</p>
+      <h2>Environment</h2>
+      <table>
+        <thead><tr><th>Variable</th><th>Meaning</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td><code>SECRYST_INDEX</code></td><td>Index URL or local path</td><td>the ml-models <code>models.yaml</code> on GitHub raw</td></tr>
+          <tr><td><code>SECRYST_CACHE</code></td><td>Artifact cache directory</td><td><code>~/.cache/secryst</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong style="color:var(--ink)">secryst</strong> · coined from <em>scrying</em> + <em>crystal</em> — to gaze into an opaque script and see its hidden reading.</div>
+    <div>Implements the <a href="spec.html">interscript-ml contract v1</a> · <a href="https://github.com/secryst">GitHub</a> · BSD-3-Clause / MIT per repo</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primer — secryst</title>
+<meta name="description" content="A technical primer on neural vocalization, diacritization, and G2P: what the hidden reading of a script is, how byte-level models recover it, and why secryst runs locally and deterministically.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="primer">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/"><span class="brand-gem" aria-hidden="true"></span>secryst</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/">Overview</a>
+      <a href="primer.html">Primer</a>
+      <a href="spec.html">Specification</a>
+      <a href="crystals.html">Crystals</a>
+      <a href="models.html">Models</a>
+    </nav>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="toc" aria-label="On this page">
+    <p class="toc-heading">On this page</p>
+    <ul>
+      <li><a href="#hidden-reading">The hidden reading</a></li>
+      <li><a href="#tasks">The three tasks</a></li>
+      <li><a href="#how">How the models work</a></li>
+      <li><a href="#local">Why local &amp; deterministic</a></li>
+      <li><a href="#no-llm">Why we never use LLMs as teachers</a></li>
+      <li><a href="#interscript">Relation to Interscript</a></li>
+    </ul>
+  </aside>
+
+  <main class="page">
+    <p class="page-eyebrow">Primer</p>
+    <h1>Reading what isn&rsquo;t written</h1>
+    <p>Secryst is a family of runtimes that recover linguistic information a writing system withholds. This primer explains the problem, the modeling approach, and the operating guarantees. No ML background beyond &ldquo;a neural network maps strings to strings&rdquo; is assumed.</p>
+
+    <div class="sec" id="hidden-reading">
+      <p class="sec-num">§1</p>
+      <h2>The hidden reading</h2>
+      <p>Many scripts underdetermine pronunciation. Written <span lang="ar" dir="rtl">قدر</span> is consistent with several Arabic words — <span lang="ar" dir="rtl">قَدَر</span> <em>qadar</em> &ldquo;fate&rdquo; among them; only the omitted short vowels disambiguate. Hebrew without nikud, Khmer orthography, and unsegmented Thai present the same property in different degrees: the <strong>reading exists in the reader&rsquo;s mind, not on the page</strong>.</p>
+      <p>Recovering it is therefore a constrained generation problem: the output must agree with every glyph that <em>is</em> written, and choose the reading that context implies. That is a job for a sequence-to-sequence model over characters — not for a lookup table, and not for rule systems alone (Khmer proves that), but exactly the shape of task small neural models learn well.</p>
+    </div>
+
+    <div class="sec" id="tasks">
+      <p class="sec-num">§2</p>
+      <h2>The three tasks</h2>
+      <table>
+        <thead><tr><th>Task</th><th>Input → output</th><th>Scripts in the index</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Diacritization</strong></td><td>undiacritized text → same text + short vowels (incl. case endings)</td><td>Arabic, Urdu</td></tr>
+          <tr><td><strong>Vocalization</strong></td><td>consonantal text → text + nikud; cantillation passed through</td><td>Hebrew</td></tr>
+          <tr><td><strong>Phonemization (G2P)</strong></td><td>orthographic text → phonemes (IPA or romanized)</td><td>Thai, Khmer, Persian, Urdu</td></tr>
+        </tbody>
+      </table>
+      <p>The same architecture covers all three; only the training corpus differs. That is why one contract and one model format serve the whole family.</p>
+    </div>
+
+    <div class="sec" id="how">
+      <p class="sec-num">§3</p>
+      <h2>How the models work</h2>
+      <p>Secryst models are <strong>byte-level encoder–decoders</strong> (the ByT5 family) exported to ONNX:</p>
+      <ul>
+        <li><strong>Byte-level tokenization</strong> — no vocabulary files, no out-of-vocabulary tokens, any script works identically. The token table is fixed: byte <code>b</code> maps to id <code>b+3</code>, with a single trailing EOS; <code>pad=0</code>, <code>eos=1</code>, <code>unk=2</code>. Ids are <em>not</em> raw byte values — see the <a href="spec.html#tokenizer">specification</a>.</li>
+        <li><strong>Greedy decoding with an optional KV cache</strong> — zips that ship <code>decoder-kv.onnx</code> decode incrementally; plain zips recompute. Both must produce identical outputs.</li>
+        <li><strong>Small by design</strong> — student-tier models are millions of parameters, not billions; they run on CPU in milliseconds per sentence. Teachers (ByT5-base scale) exist for distillation, and the published numbers in <a href="models.html">Models</a> show what the small ones inherit.</li>
+      </ul>
+    </div>
+
+    <div class="sec" id="local">
+      <p class="sec-num">§4</p>
+      <h2>Why local &amp; deterministic</h2>
+      <p>Transliteration and vocalization are infrastructure: they run inside publishing pipelines, archival processing, and embedded runtimes. Secryst&rsquo;s operating guarantees follow:</p>
+      <ul>
+        <li><strong>No network at inference</strong> — artifacts download once (sha256-verified), then load from cache; every cache hit is re-verified.</li>
+        <li><strong>Reproducible</strong> — greedy decoding, fixed tokenization, versioned artifacts. Same input, same model version, same output — forever.</li>
+        <li><strong>Auditable</strong> — the model is a zip you can hash, inspect, and pin; <code>models.yaml</code> is the whole supply chain.</li>
+      </ul>
+    </div>
+
+    <div class="sec" id="no-llm">
+      <p class="sec-num">§5</p>
+      <h2>Why we never use LLMs as teachers</h2>
+      <p>Every label in every secryst training corpus is either gold human text or the output of a deterministic rule system. Large language models <strong>hallucinate vocalization</strong>: they emit fluent, plausible, wrong harakat and nikud. A single systematic hallucination, distilled into a student, becomes a permanent error no eval will localize. We treat LLM-labeled phonology as a poison chain — documented across our Arabic, Hebrew, and Thai experiments — and the constraint is enforced socially in every dataset we accept.</p>
+      <p>Machine-labeled data is not banned — it is <em>staged</em>: weak labels may pretrain, but only human-verified corpora fine-tune the shipped model (validated: our Hebrew curriculum gained 0.88 DER points this way).</p>
+    </div>
+
+    <div class="sec" id="interscript">
+      <p class="sec-num">§6</p>
+      <h2>Relation to Interscript</h2>
+      <p><a href="https://interscript.org">Interscript</a> publishes deterministic transliteration maps — but maps assume vocalized input; undiacritized text cannot be transliterated unambiguously. Secryst is the phonological layer underneath: maps that need it declare a vocalization step and dispatch to the host runtime&rsquo;s crystal. The crystals themselves have no interscript dependency — a TTS front-end can phonemize Khmer with <code>pip install secryst</code> and nothing else. Interscript defines what a hidden reading is; secryst is how you reveal it, in-process.</p>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong style="color:var(--ink)">secryst</strong> · coined from <em>scrying</em> + <em>crystal</em> — to gaze into an opaque script and see its hidden reading.</div>
+    <div>Implements the <a href="spec.html">interscript-ml contract v1</a> · <a href="https://github.com/secryst">GitHub</a> · BSD-3-Clause / MIT per repo</div>
+  </div>
+</footer>
+
+</body>
+</html>

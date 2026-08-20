@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crystal reference — secryst</title>
+<meta name="description" content="API reference for the three secryst crystals: Ruby gem, Python package, and TypeScript package. Install, load, translate, environment variables, and release status.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="crystals">
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/"><span class="brand-gem" aria-hidden="true"></span>secryst</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/">Overview</a>
+      <a href="primer.html">Primer</a>
+      <a href="spec.html">Specification</a>
+      <a href="crystals.html">Crystals</a>
+      <a href="models.html">Models</a>
+    </nav>
+  </div>
+</header>
+
+<div class="docs-layout">
+  <aside class="toc" aria-label="On this page">
+    <p class="toc-heading">Crystals</p>
+    <ul>
+      <li><a href="#python">Python (reference)</a></li>
+      <li><a href="#ruby">Ruby</a></li>
+      <li><a href="#typescript">TypeScript</a></li>
+      <li><a href="#status">Release status</a></li>
+    </ul>
+  </aside>
+
+  <main class="page">
+    <p class="page-eyebrow">API reference</p>
+    <h1>The crystal family</h1>
+    <p>Three implementations, one contract, one behavior. Choose the language your process runs in; the model ids, artifacts, and outputs are identical. All crystals read <code>SECRYST_INDEX</code> / <code>SECRYST_CACHE</code>.</p>
+
+    <div class="sec" id="python">
+      <p class="sec-num">reference</p>
+      <h2>Python <span class="badge badge-hold">0.1.0 · publish pending</span></h2>
+      <p>The reference crystal: it generates the golden sets the others are diffed against and owns numerical adjudication. Pure stdlib plus <code>yaml</code>/<code>requests</code>; inference needs <code>onnxruntime</code>.</p>
+      <p class="code-label">install</p>
+      <pre><code>pip install secryst</code></pre>
+      <p class="code-label">usage</p>
+      <pre><code>from secryst import Model
+
+model = Model.load("khm-latn-1.0")   # resolve -&gt; download -&gt; verify -&gt; cache
+model.translate("ភាសា")               # -&gt; "pheasaea"</code></pre>
+      <p>Low-level surfaces: <code>secryst.encode/decode</code> (the byte tokenizer), <code>verify_and_read(zip)</code> (IMF loading), <code>resolve(id)</code> (index + cache). Errors: <code>ModelFormatError</code>, <code>RegistryError</code>. Source: <a href="https://github.com/secryst/secryst-py">secryst/secryst-py</a>.</p>
+    </div>
+
+    <div class="sec" id="ruby">
+      <p class="sec-num">the original</p>
+      <h2>Ruby <span class="badge badge-review">v1 line · in review</span></h2>
+      <p>Secryst was born Ruby in 2020 — a seq2seq transformer gem. The v1 line runs ByT5-family models in pure Ruby over ONNX (via <a href="https://github.com/secryst/onnxruntime">secryst/onnxruntime</a>), with no libtorch and no native compilation of the model itself.</p>
+      <p class="code-label">install</p>
+      <pre><code>gem 'secryst'</code></pre>
+      <p class="code-label">usage</p>
+      <pre><code>require 'secryst'
+
+translator = Secryst::Translator.new(model_file: 'khm-latn-byt5.zip')
+translator.translate('ភាសា')   # =&gt; "pheasaea"</code></pre>
+      <p>Index-based loading (models.yaml resolution with <code>Secryst::IMF</code>) ships on the v1 line, currently open as <a href="https://github.com/secryst/secryst/pull/47">PR #47</a>. Source: <a href="https://github.com/secryst/secryst">secryst/secryst</a>.</p>
+    </div>
+
+    <div class="sec" id="typescript">
+      <p class="sec-num">the embeddable</p>
+      <h2>TypeScript <span class="badge badge-hold">0.1.0 · publish pending</span></h2>
+      <p>Node crystal for the interscript-js ecosystem and any TypeScript runtime. <code>onnxruntime-node</code> is an optional peer — registry and index consumers can use this package with zero native dependencies.</p>
+      <p class="code-label">install</p>
+      <pre><code>npm install @secryst/ml onnxruntime-node</code></pre>
+      <p class="code-label">usage</p>
+      <pre><code>import { load } from "@secryst/ml";
+
+const model = await load("khm-latn-1.0");
+await model.translate("ភាសា");   // "pheasaea"</code></pre>
+      <p>Mirrors the Python API: <code>loadIndex</code>, <code>resolve</code>, <code>verifyAndRead</code>, <code>encode/decode</code>. Source: <a href="https://github.com/secryst/secryst-ts">secryst/secryst-ts</a>.</p>
+    </div>
+
+    <div class="sec" id="status">
+      <h2>Release status</h2>
+      <table>
+        <thead><tr><th>Crystal</th><th>Package</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Python</td><td><code>secryst</code> (PyPI)</td><td><span class="badge badge-hold">built · upload pending token</span></td></tr>
+          <tr><td>Ruby</td><td><code>secryst</code> (RubyGems)</td><td><span class="badge badge-review">v1 in review (PR #47)</span></td></tr>
+          <tr><td>TypeScript</td><td><code>@secryst/ml</code> (npm)</td><td><span class="badge badge-hold">built · publish pending org</span></td></tr>
+          <tr><td>Index manifest</td><td><code>@secryst/models</code> (npm)</td><td><span class="badge badge-hold">v0.0.1 · with PR #14</span></td></tr>
+        </tbody>
+      </table>
+      <p>Artifacts are built and tested; the two registry publishes wait on credentials, the gem on golden-parity CI landing with PR #47. This table is the honest state of the world and will be updated as each ships.</p>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><strong style="color:var(--ink)">secryst</strong> · coined from <em>scrying</em> + <em>crystal</em> — to gaze into an opaque script and see its hidden reading.</div>
+    <div>Implements the <a href="spec.html">interscript-ml contract v1</a> · <a href="https://github.com/secryst">GitHub</a> · BSD-3-Clause / MIT per repo</div>
+  </div>
+</footer>
+
+</body>
+</html>
