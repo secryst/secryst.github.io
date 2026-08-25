@@ -1,0 +1,29 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="footer-inner">
+    <div><strong class="footer-brand">secryst</strong> · coined from <em>scrying</em> + <em>crystal</em> — to gaze into an opaque script and see its hidden reading.</div>
+    <div>Implements the <a href="/spec/">interscript-ml contract v1</a> · <a href="https://github.com/secryst" rel="noreferrer">GitHub</a> · BSD-3-Clause / MIT per repo · © {year}</div>
+  </div>
+</footer>
+
+<style>
+footer {
+  border-top: 1px solid var(--color-line);
+  padding: 2.5rem 1.5rem 3rem;
+  font-size: 0.85rem;
+  color: var(--color-slate);
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-brand { color: var(--color-ink); }
+</style>

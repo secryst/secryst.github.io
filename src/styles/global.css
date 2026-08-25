@@ -1,0 +1,354 @@
+@import "tailwindcss";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/400-italic.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+
+/* ──────────────────────────────────────────────────────────────────
+   secryst — light instrument-panel theme; one spectral accent (the
+   prism). Space Grotesk (display) · IBM Plex Sans (body) ·
+   IBM Plex Mono (code).
+   ────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --color-paper: #fafbfc;
+  --color-panel: #ffffff;
+  --color-ink: #101828;
+  --color-ink-deep: #1d2939;
+  --color-slate: #475467;
+  --color-faint: #98a2b3;
+  --color-line: #e4e7ec;
+  --color-code-bg: #0e1526;
+  --color-code-ink: #d5dce8;
+  --color-violet: #5a4fe0;
+  --color-violet-deep: #6a58ee;
+  --color-spectral-mid: #7a5cf0;
+  --color-blue-mid: #3f8fe8;
+  --color-cyan: #00b8d9;
+  --color-ok: #067647;
+  --color-ok-bg: #ecfdf3;
+  --color-ok-line: #abefc6;
+  --color-warn: #b54708;
+  --color-warn-bg: #fffaeb;
+  --color-warn-line: #fead0a66;
+
+  --font-display: "Space Grotesk", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+:root {
+  --spectral: linear-gradient(100deg, #5a4fe0 0%, #7a5cf0 35%, #00b8d9 100%);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--color-violet); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--color-violet); outline-offset: 2px; }
+
+/* ── docs layout: TOC sidebar + page ─────────────────────────────── */
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.docs-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 3rem;
+  padding: 2.5rem 1.5rem 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .docs-layout { grid-template-columns: minmax(0, 1fr); }
+  .toc { display: none; }
+}
+.toc {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+  font-size: .82rem;
+}
+.toc-heading {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  margin: 0 0 .75rem;
+}
+.toc ul { list-style: none; margin: 0; padding: 0; }
+.toc li { margin: .3rem 0; }
+.toc a {
+  color: var(--color-slate);
+  display: block;
+  padding: .15rem 0 .15rem .8rem;
+  border-left: 2px solid var(--color-line);
+}
+.toc a:hover {
+  color: var(--color-ink);
+  text-decoration: none;
+  border-left-color: var(--color-faint);
+}
+
+.page { max-width: 76ch; }
+.page h1 {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0 0 .6rem;
+}
+.page h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  margin: 2.6rem 0 .7rem;
+  letter-spacing: -0.01em;
+}
+.page h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 1.8rem 0 .5rem;
+}
+.page p { color: var(--color-ink); margin: .8rem 0; }
+.page p, .page li { max-width: 70ch; }
+.page ul, .page ol { padding-left: 1.4rem; }
+.page li { margin: .35rem 0; }
+.page-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--color-violet);
+  margin: 0 0 .5rem;
+}
+
+/* spec sections, ordered like a standard */
+.sec { border-top: 1px solid var(--color-line); margin-top: 2.5rem; padding-top: 1.5rem; }
+.sec-num {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  color: var(--color-faint);
+}
+.sec > h2 { margin-top: .2rem; }
+
+/* RFC-2119 keywords */
+.rfc {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: .82em;
+  letter-spacing: .06em;
+  color: var(--color-violet);
+}
+
+/* ── code ────────────────────────────────────────────────────────── */
+
+code {
+  font-family: var(--font-mono);
+  font-size: .86em;
+  background: #eef0f4;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  padding: .08em .38em;
+  color: var(--color-ink-deep);
+}
+pre {
+  background: var(--color-code-bg);
+  color: var(--color-code-ink);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  font-size: .84rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+pre code { background: none; border: 0; padding: 0; color: inherit; font-size: 1em; }
+.code-label {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  margin: 1.1rem 0 -0.6rem;
+}
+
+/* ── tables ──────────────────────────────────────────────────────── */
+
+table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: .9rem; }
+@media (max-width: 640px) {
+  .page table { display: block; overflow-x: auto; }
+}
+th {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--color-slate);
+  text-align: left;
+  padding: .55rem .75rem;
+  border-bottom: 2px solid var(--color-line);
+}
+td {
+  padding: .55rem .75rem;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+
+/* ── badges ──────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .18rem .5rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-line);
+  color: var(--color-slate);
+  background: var(--color-panel);
+  vertical-align: middle;
+}
+.badge-v1 { background: var(--spectral); color: #fff; border: 0; }
+.badge-ok { color: var(--color-ok); border-color: var(--color-ok-line); background: var(--color-ok-bg); }
+.badge-review { color: var(--color-warn); border-color: var(--color-warn-line); background: var(--color-warn-bg); }
+.badge-hold { color: var(--color-slate); border-color: var(--color-line); }
+
+/* ── hero (landing) ──────────────────────────────────────────────── */
+
+.hero {
+  border-bottom: 1px solid var(--color-line);
+  background:
+    radial-gradient(900px 380px at 85% -10%, rgba(90, 79, 224, .06), transparent 60%),
+    var(--color-paper);
+}
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: 3rem;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: .8rem 0 1rem;
+}
+.hero .page-eyebrow { margin-bottom: 0; }
+.hero-lede {
+  color: var(--color-slate);
+  font-size: 1.08rem;
+  max-width: 54ch;
+  margin: 0 0 1.6rem;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+.btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: .95rem;
+  padding: .65rem 1.3rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-ink);
+  display: inline-block;
+}
+.btn-primary { background: var(--color-ink); color: #fff; }
+.btn-primary:hover { background: var(--color-ink-deep); text-decoration: none; }
+.btn-ghost { color: var(--color-ink); border-color: var(--color-line); background: var(--color-panel); }
+.btn-ghost:hover { border-color: var(--color-ink); text-decoration: none; }
+
+/* ── the prism (signature) ───────────────────────────────────────── */
+
+.prism-stage { position: relative; padding: 2rem 0 2.4rem; }
+.prism-svg { width: 100%; height: auto; display: block; }
+.beam-in { stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw 1.6s .3s ease-out forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.disperse { opacity: 0; animation: appear .9s 1.9s ease-out forwards; }
+@keyframes appear { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .beam-in { stroke-dashoffset: 0; animation: none; }
+  .disperse { opacity: 1; animation: none; }
+}
+
+/* ── landing sections ────────────────────────────────────────────── */
+
+.band { border-bottom: 1px solid var(--color-line); }
+.band-inner { max-width: 1200px; margin: 0 auto; padding: 3.5rem 1.5rem; }
+.band h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin: 0 0 .4rem;
+  letter-spacing: -0.01em;
+}
+.band .band-sub { color: var(--color-slate); margin: 0 0 1.8rem; max-width: 70ch; }
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+  gap: 1.1rem;
+}
+.card {
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  padding: 1.4rem 1.4rem 1.2rem;
+}
+.card h3 {
+  font-family: var(--font-display);
+  margin: 0 0 .5rem;
+  font-size: 1.02rem;
+}
+.card p { color: var(--color-slate); font-size: .92rem; margin: 0 0 .8rem; }
+.card .mono-chip {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--color-violet);
+}
+
+.reveal-io { display: grid; gap: .15rem; margin: .4rem 0 .6rem; }
+.reveal-io .src {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  color: var(--color-faint);
+}
+.reveal-io .dst {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  background: var(--spectral);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.reveal-io .gloss { font-size: .78rem; color: var(--color-faint); font-style: italic; }
