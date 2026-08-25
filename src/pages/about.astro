@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TocNav from '../components/TocNav.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="What secryst is, where the name comes from, the crystal family, how it relates to Interscript, and the principles it is built on."
+>
+  <div class="docs-layout">
+    <TocNav
+      heading="About"
+      items={[
+        { href: '#name', label: 'The name' },
+        { href: '#what', label: 'What secryst is' },
+        { href: '#family', label: 'The crystal family' },
+        { href: '#interscript', label: 'Relation to Interscript' },
+        { href: '#principles', label: 'Principles' },
+        { href: '#license', label: 'License & source' },
+      ]}
+    />
+
+    <main class="page">
+      <p class="page-eyebrow">About</p>
+      <h1>To gaze into an opaque script and see its hidden reading.</h1>
+
+      <div class="sec" id="name">
+        <h2>The name</h2>
+        <p><strong>secryst</strong> is coined from <em>scrying</em> + <em>crystal</em>. Scrying is the old word for gazing into a crystal ball to see what is hidden; secryst is a family of <em>crystals</em> — small runtime gems and packages — that gaze into opaque scripts and reveal their hidden readings.</p>
+      </div>
+
+      <div class="sec" id="what">
+        <h2>What secryst is</h2>
+        <p>Secryst is a family of runtimes that recover linguistic information a writing system withholds: the short vowels of written Arabic, the nikud of unpointed Hebrew, the phonemes behind Khmer and Thai orthography. It does this with byte-level sequence-to-sequence models (the ByT5 family, exported to ONNX) running in-process — no cloud, no LLM, no telemetry.</p>
+        <p>Every artifact is a zip you can hash, inspect, and pin, resolved through a single versioned <code>models.yaml</code> index implementing the <a href="/spec/">interscript-ml contract&nbsp;v1</a>. Same input, same model version, same output — forever. The <a href="/primer/">primer</a> walks through the problem and the approach in depth.</p>
+      </div>
+
+      <div class="sec" id="family">
+        <h2>The crystal family</h2>
+        <p>Three implementations of one contract with identical behavior — the <a href="/crystals/">crystal reference</a> carries the API details:</p>
+        <table>
+          <thead><tr><th>Crystal</th><th>Package</th><th>Born</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Ruby</strong></td><td><code>gem 'secryst'</code> — the original: a seq2seq transformer gem first cut in 2020</td><td>2020</td></tr>
+            <tr><td><strong>Python</strong></td><td><code>pip install secryst</code> — the reference: generates the golden sets the others are diffed against</td><td>the v1 line</td></tr>
+            <tr><td><strong>TypeScript</strong></td><td><code>npm i secryst</code> — the embeddable one for the interscript-js ecosystem</td><td>the v1 line</td></tr>
+          </tbody>
+        </table>
+        <p>Teachers are trained in <a href="https://github.com/secryst/secryst-train" rel="noreferrer">secryst-train</a>; distilled students that pass the export gate are published into the <a href="https://github.com/interscript/interscript-ml" rel="noreferrer">interscript-ml</a> zoo. The <a href="/models/">model catalogue</a> lists every id with its measured quality.</p>
+      </div>
+
+      <div class="sec" id="interscript">
+        <h2>Relation to Interscript</h2>
+        <p><a href="https://interscript.org" rel="noreferrer">Interscript</a> publishes deterministic transliteration maps — but maps assume vocalized input; undiacritized text cannot be transliterated unambiguously. Secryst is the phonological layer underneath: maps that need it declare a vocalization step and dispatch to the host runtime&rsquo;s crystal. The crystals themselves have no interscript dependency — related by contract, not by captivity.</p>
+      </div>
+
+      <div class="sec" id="principles">
+        <h2>Principles</h2>
+        <ul>
+          <li><strong>Local &amp; deterministic</strong> — no network at inference; artifacts download once, sha256-verified, then load from cache; every cache hit re-verifies.</li>
+          <li><strong>Never LLMs as teachers</strong> — large language models hallucinate vocalization; a single systematic hallucination distilled into a student becomes a permanent error. Every label is gold human text or deterministic rule output.</li>
+          <li><strong>Parity over promises</strong> — the reference crystal generates golden sets; the others must reproduce them byte-for-byte in CI before any release. A model that behaves differently across runtimes never ships.</li>
+        </ul>
+      </div>
+
+      <div class="sec" id="license">
+        <h2>License &amp; source</h2>
+        <p>BSD-3-Clause / MIT per repository, all source on <a href="https://github.com/secryst" rel="noreferrer">GitHub under the secryst organization</a>. Issues and pull requests are welcome.</p>
+      </div>
+    </main>
+  </div>
+</BaseLayout>

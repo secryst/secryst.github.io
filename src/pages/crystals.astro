@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TocNav from '../components/TocNav.astro';
+import CopyButton from '../components/vue/CopyButton.vue';
+
+const pythonInstall = `pip install secryst`;
+const pythonCode = `from secryst import Model
+
+model = Model.load("khm-latn-1.0")   # resolve -> download -> verify -> cache
+model.translate("ភាសា")               # -> "pheasaea"`;
+const rubyInstall = `gem 'secryst'`;
+const rubyCode = `require 'secryst'
+
+translator = Secryst::Translator.new(model_file: 'khm-latn-byt5.zip')
+translator.translate('ភាសា')   # => "pheasaea"`;
+const tsInstall = `npm install secryst onnxruntime-node`;
+const tsCode = `import { load } from "secryst";
+
+const model = await load("khm-latn-1.0");
+await model.translate("ភាសា");   // "pheasaea"`;
+---
+
+<BaseLayout
+  title="Crystal reference"
+  description="API reference for the three secryst crystals: Ruby gem, Python package, and TypeScript package. Install, load, translate, environment variables, and release status."
+>
+  <div class="docs-layout">
+    <TocNav
+      heading="Crystals"
+      items={[
+        { href: '#python', label: 'Python (reference)' },
+        { href: '#ruby', label: 'Ruby' },
+        { href: '#typescript', label: 'TypeScript' },
+        { href: '#status', label: 'Release status' },
+      ]}
+    />
+
+    <main class="page">
+      <p class="page-eyebrow">API reference</p>
+      <h1>The crystal family</h1>
+      <p>Three implementations, one contract, one behavior. Choose the language your process runs in; the model ids, artifacts, and outputs are identical. All crystals read <code>SECRYST_INDEX</code> / <code>SECRYST_CACHE</code>.</p>
+
+      <div class="sec" id="python">
+        <p class="sec-num">reference</p>
+        <h2>Python <span class="badge badge-ok">0.1.1 · live</span></h2>
+        <p>The reference crystal: it generates the golden sets the others are diffed against and owns numerical adjudication. Pure stdlib plus <code>yaml</code>/<code>requests</code>; inference needs <code>onnxruntime</code>.</p>
+        <p class="code-label">install</p>
+        <pre><code>{pythonInstall}</code></pre>
+        <p class="code-label">usage</p>
+        <pre><code>{pythonCode}</code></pre>
+        <p>Low-level surfaces: <code>secryst.encode/decode</code> (the byte tokenizer), <code>verify_and_read(zip)</code> (IMF loading), <code>resolve(id)</code> (index + cache). Errors: <code>ModelFormatError</code>, <code>RegistryError</code>. Source: <a href="https://github.com/secryst/secryst-py" rel="noreferrer">secryst/secryst-py</a>.</p>
+        <CopyButton text={pythonCode} label="copy usage" client:visible />
+      </div>
+
+      <div class="sec" id="ruby">
+        <p class="sec-num">the original</p>
+        <h2>Ruby <span class="badge badge-ok">1.0.0 · live</span></h2>
+        <p>Secryst was born Ruby in 2020 — a seq2seq transformer gem. The v1 line runs ByT5-family models in pure Ruby over ONNX (via <a href="https://github.com/secryst/onnxruntime" rel="noreferrer">secryst/onnxruntime</a>), with no libtorch and no native compilation of the model itself.</p>
+        <p class="code-label">install</p>
+        <pre><code>{rubyInstall}</code></pre>
+        <p class="code-label">usage</p>
+        <pre><code>{rubyCode}</code></pre>
+        <p>Index-based loading (models.yaml resolution with <code>Secryst::IMF</code>) ships on the v1 line, currently open as <a href="https://github.com/secryst/secryst/pull/47" rel="noreferrer">PR #47</a>. Source: <a href="https://github.com/secryst/secryst" rel="noreferrer">secryst/secryst</a>.</p>
+        <CopyButton text={rubyCode} label="copy usage" client:visible />
+      </div>
+
+      <div class="sec" id="typescript">
+        <p class="sec-num">the embeddable</p>
+        <h2>TypeScript <span class="badge badge-hold">0.1.0 · publish pending</span></h2>
+        <p>Node crystal for the interscript-js ecosystem and any TypeScript runtime. <code>onnxruntime-node</code> is an optional peer — registry and index consumers can use this package with zero native dependencies.</p>
+        <p class="code-label">install</p>
+        <pre><code>{tsInstall}</code></pre>
+        <p class="code-label">usage</p>
+        <pre><code>{tsCode}</code></pre>
+        <p>Mirrors the Python API: <code>loadIndex</code>, <code>resolve</code>, <code>verifyAndRead</code>, <code>encode/decode</code>. Source: <a href="https://github.com/secryst/secryst-ts" rel="noreferrer">secryst/secryst-ts</a>.</p>
+        <CopyButton text={tsCode} label="copy usage" client:visible />
+      </div>
+
+      <div class="sec" id="status">
+        <h2>Release status</h2>
+        <table>
+          <thead><tr><th>Crystal</th><th>Package</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Python</td><td><code>secryst</code> (PyPI)</td><td><span class="badge badge-ok">0.1.1 · live</span></td></tr>
+            <tr><td>Ruby</td><td><code>secryst</code> (RubyGems)</td><td><span class="badge badge-review">v1 in review (PR #47)</span></td></tr>
+            <tr><td>TypeScript</td><td><code>secryst</code> (npm)</td><td><span class="badge badge-ok">0.1.0 · live</span></td></tr>
+            <tr><td>Index manifest</td><td><code>@secryst/models</code> (npm)</td><td><span class="badge badge-hold">v0.0.1 · with PR #14</span></td></tr>
+          </tbody>
+        </table>
+        <p>Artifacts are built and tested; the two registry publishes wait on credentials, the gem on golden-parity CI landing with PR #47. This table is the honest state of the world and will be updated as each ships.</p>
+      </div>
+    </main>
+  </div>
+</BaseLayout>

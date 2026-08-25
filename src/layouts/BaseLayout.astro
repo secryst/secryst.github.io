@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/vue/SiteHeader.vue';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = 'Crystal runtimes for neural vocalization, diacritization, and G2P: local, deterministic, sha256-verified ONNX models behind the interscript-ml contract. Ruby, Python, TypeScript.',
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = title === 'secryst' ? 'secryst' : `${title} — secryst`;
+const siteUrl = Astro.site ?? new URL('https://www.secryst.org');
+const canonical = new URL(Astro.url.pathname, siteUrl);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'secryst',
+  url: 'https://www.secryst.org',
+  description,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Cross-platform',
+  license: 'https://github.com/secryst',
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <SiteHeader currentPath={Astro.url.pathname} client:load />
+    <slot />
+    <SiteFooter />
+  </body>
+</html>
