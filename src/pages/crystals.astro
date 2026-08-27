@@ -60,13 +60,13 @@ await model.translate("ភាសា");   // "pheasaea"`;
         <pre><code>{rubyInstall}</code></pre>
         <p class="code-label">usage</p>
         <pre><code>{rubyCode}</code></pre>
-        <p>Index-based loading (models.yaml resolution with <code>Secryst::IMF</code>) ships on the v1 line, currently open as <a href="https://github.com/secryst/secryst/pull/47" rel="noreferrer">PR #47</a>. Source: <a href="https://github.com/secryst/secryst" rel="noreferrer">secryst/secryst</a>.</p>
+        <p>Index-based loading (models.yaml resolution with <code>Secryst::IMF</code>) shipped with v1.0.0 (<a href="https://github.com/secryst/secryst/pull/47" rel="noreferrer">PR #47</a>, merged; golden-parity CI green). Source: <a href="https://github.com/secryst/secryst" rel="noreferrer">secryst/secryst</a>.</p>
         <CopyButton text={rubyCode} label="copy usage" client:visible />
       </div>
 
       <div class="sec" id="typescript">
         <p class="sec-num">the embeddable</p>
-        <h2>TypeScript <span class="badge badge-hold">0.1.0 · publish pending</span></h2>
+        <h2>TypeScript <span class="badge badge-ok">0.1.0 · live</span></h2>
         <p>Node crystal for the interscript-js ecosystem and any TypeScript runtime. <code>onnxruntime-node</code> is an optional peer — registry and index consumers can use this package with zero native dependencies.</p>
         <p class="code-label">install</p>
         <pre><code>{tsInstall}</code></pre>
@@ -82,12 +82,12 @@ await model.translate("ភាសា");   // "pheasaea"`;
           <thead><tr><th>Crystal</th><th>Package</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td>Python</td><td><code>secryst</code> (PyPI)</td><td><span class="badge badge-ok">0.1.1 · live</span></td></tr>
-            <tr><td>Ruby</td><td><code>secryst</code> (RubyGems)</td><td><span class="badge badge-review">v1 in review (PR #47)</span></td></tr>
+            <tr><td>Ruby</td><td><code>secryst</code> (RubyGems)</td><td><span class="badge badge-ok">1.0.0 · live</span></td></tr>
             <tr><td>TypeScript</td><td><code>secryst</code> (npm)</td><td><span class="badge badge-ok">0.1.0 · live</span></td></tr>
-            <tr><td>Index manifest</td><td><code>@secryst/models</code> (npm)</td><td><span class="badge badge-hold">v0.0.1 · with PR #14</span></td></tr>
+            <tr><td>Index manifest</td><td><code>@secryst/models</code> (npm)</td><td><span class="badge badge-hold">pending — awaits first publish (trusted publishing)</span></td></tr>
           </tbody>
         </table>
-        <p>Artifacts are built and tested; the two registry publishes wait on credentials, the gem on golden-parity CI landing with PR #47. This table is the honest state of the world and will be updated as each ships.</p>
+        <p>Ruby and TypeScript are live; the index manifest package publishes via npm Trusted Publishing when its content is ready. This table is the honest state of the world and will be updated as each ships.</p>
       </div>
     </main>
   </div>
