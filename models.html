@@ -39,23 +39,42 @@
   <main class="page">
     <p class="page-eyebrow">Model zoo</p>
     <h1>Models you can scry with</h1>
-    <p>Ids resolve through the <a href="https://github.com/interscript/interscript-ml/blob/main/models.yaml">models.yaml index</a>. Teachers are the strongest trained models; students are the compact distillations that actually ship in the crystals.</p>
+    <p>Ids resolve through the <a href="https://github.com/interscript/interscript-ml/blob/main/models.yaml">models.yaml index</a>. Teachers are the strongest trained models; students are the compact distillations that actually ship in the crystals. Every artifact is mirrored on the <a href="https://huggingface.co/Interscript">Hugging Face Interscript org</a>, sha256-verified against the index — browse them via the <a href="https://huggingface.co/collections/Interscript/secryst-phonological-layer-6ac3393f7ea49323314bb84b">Secryst phonological layer collection</a>.</p>
+
+
+    <div class="sec" id="flagship">
+      <h2>Flagship: ara-diac-2.0</h2>
+      <p>The current best dedicated diacritization model: a 580M-parameter ByT5-large-class byte-level transformer. On the full 1,200-paragraph SadeedDiac-25 benchmark (Misraj's evaluator, zero skipped examples, greedy decode, protocol-matched published numbers only) it reaches <strong>2.29% Total DER</strong> — ahead of every frontier LLM except Claude-3.7-Sonnet. Word-final iʿrāb endings, the hardest component: <strong>1.33% DER</strong>. Out-of-domain generalization (WikiNews-2024, multi-reference): 17.38 WER / 11.83 DER.</p>
+      <table>
+        <thead><tr><th>system</th><th>Total DER</th><th>kind</th></tr></thead>
+        <tbody>
+          <tr><td>Claude-3.7-Sonnet</td><td>1.39%</td><td>frontier LLM</td></tr>
+          <tr><td><strong>ara-diac-2.0</strong></td><td><strong>2.29%</strong></td><td>dedicated, 580M</td></tr>
+          <tr><td>GLM-5.2</td><td>2.69%</td><td>frontier LLM</td></tr>
+          <tr><td>Gemini-Flash-2.0</td><td>3.19%</td><td>frontier LLM</td></tr>
+          <tr><td>GPT-4</td><td>3.86%</td><td>frontier LLM</td></tr>
+          <tr><td>Sadeed-1.5B</td><td>7.29%</td><td>leaderboard baseline</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="sec" id="zoo">
       <h2>Zoo</h2>
       <table>
         <thead><tr><th>id / family</th><th>reveals</th><th>measured quality</th></tr></thead>
         <tbody>
-          <tr><td><code>ara-diac-1.0</code> <span class="badge">teacher</span></td><td>Arabic consonants → harakāt</td><td>2.58% windowed DER-CE on SadeedDiac-25; 1.53% on word-final iʿrāb endings</td></tr>
-          <tr><td><code>ara-diac-small-1.0</code> <span class="badge">student</span></td><td>Arabic → harakāt (compact, 1.3&nbsp;GiB)</td><td>3.66% on the same harness — the +2.34pp cost of the ByT5-small client rung</td></tr>
-          <tr><td><code>heb-diac-1.1</code> <span class="badge">student</span></td><td>Hebrew consonants → nikud</td><td>16.44% DER greedy / 16.43% beam-4 — the current best Hebrew rung</td></tr>
-          <tr><td><code>heb-diac-1.0</code> <span class="badge">student</span></td><td>Hebrew → nikud</td><td>17.46% DER beam-4 (DictaBERT baseline 35.6%)</td></tr>
-          <tr><td><code>heb-diac-small-1.0</code> <span class="badge">student</span></td><td>Hebrew → nikud (compact)</td><td>30.37% DER vs teacher 24.79% — +5.6pp for the 2× shrink</td></tr>
-          <tr><td><code>fas-g2p-1.0</code></td><td>Persian → Latin reading</td><td>1.6% CER; 77.34% SentenceBench homograph accuracy</td></tr>
-          <tr><td><code>tha-g2p-base-1.0</code> <span class="badge">student</span></td><td>Thai → IPA</td><td>teacher at 4.43% PER (public baseline 6.37%); student gated at +4.76pp</td></tr>
-          <tr><td><code>tha-g2p-small-1.0</code> <span class="badge">student</span></td><td>Thai → IPA (int8, 246&nbsp;MiB)</td><td>2.85% PER greedy on the runtime protocol; parity 0.08pp</td></tr>
-          <tr><td><code>urd-diac-1.0</code>, <code>urd-g2p-1.0</code></td><td>Urdu → vocalized / phonemes</td><td>diacritization 3.74% CER; G2P 14.77% CER — first learned Urdu baselines we know of</td></tr>
-          <tr><td><code>khm-latn-1.0</code></td><td>Khmer text → Latin reading</td><td>59.66% exact match, 27.42 CER (forward model)</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/ara-diac-2.0">ara-diac-2.0</a></code> <span class="badge">flagship</span></td><td>Arabic consonants → harakāt</td><td>2.29% full-set DER on SadeedDiac-25 — best dedicated system (Gemini-Flash 3.19, GPT-4 3.86); 1.33% word-final iʿrāb; <code>ara-diac-2.0-int8</code> parity-gated at identical metrics</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/ara-diac-1.0">ara-diac-1.0</a></code> <span class="badge">teacher</span></td><td>Arabic consonants → harakāt (legacy teacher)</td><td>2.58% full-set DER on SadeedDiac-25; 1.53% on word-final iʿrāb endings</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/ara-diac-small-1.0">ara-diac-small-1.0</a></code> <span class="badge">student</span></td><td>Arabic → harakāt (compact, 1.3&nbsp;GiB)</td><td>8.26% full-set DER (+5.68pp vs its teacher) — an earlier 3.66% figure came from a partial subset and is retracted; superseded by <code>ara-diac-small-2.1</code></td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/ara-diac-small-2.1">ara-diac-small-2.1</a></code> <span class="badge">student</span></td><td>Arabic → harakāt (compact)</td><td>4.57% full-set DER, distilled from ara-diac-2.0 (+2.28pp for the client rung); <code>ara-diac-small-2.1-int8</code> parity-gated at identical metrics</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/heb-diac-1.1">heb-diac-1.1</a></code> <span class="badge">student</span></td><td>Hebrew consonants → nikud</td><td>16.44% DER greedy / 16.43% beam-4 — the current best Hebrew rung</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/heb-diac-1.0">heb-diac-1.0</a></code> <span class="badge">student</span></td><td>Hebrew → nikud</td><td>17.46% DER beam-4 (DictaBERT baseline 35.6%)</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/heb-diac-small-1.0">heb-diac-small-1.0</a></code> <span class="badge">student</span></td><td>Hebrew → nikud (compact)</td><td>30.37% DER vs teacher 24.79% — +5.6pp for the 2× shrink</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/fas-g2p-1.0">fas-g2p-1.0</a></code></td><td>Persian → Latin reading</td><td>1.6% CER; 77.34% SentenceBench homograph accuracy</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/tha-g2p-base-1.0">tha-g2p-base-1.0</a></code> <span class="badge">student</span></td><td>Thai → IPA</td><td>teacher at 4.43% PER (public baseline 6.37%); student gated at +4.76pp</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/tha-g2p-small-1.0">tha-g2p-small-1.0</a></code> <span class="badge">student</span></td><td>Thai → IPA (int8, 246&nbsp;MiB)</td><td>2.85% PER greedy on the runtime protocol; parity 0.08pp</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/urd-diac-1.0">urd-diac-1.0</a></code>, <code><a href="https://huggingface.co/Interscript/urd-g2p-1.0">urd-g2p-1.0</a></code></td><td>Urdu → vocalized / phonemes</td><td>diacritization 3.74% CER; G2P 14.77% CER — first learned Urdu baselines we know of</td></tr>
+          <tr><td><code><a href="https://huggingface.co/Interscript/khm-latn-1.0">khm-latn-1.0</a></code></td><td>Khmer text → Latin reading</td><td>59.66% exact match, 27.42 CER (forward model)</td></tr>
         </tbody>
       </table>
     </div>
