@@ -30,6 +30,7 @@
     <p class="toc-heading">Models</p>
     <ul>
       <li><a href="#zoo">Model zoo</li>
+      <li><a href="#leaderboard">SadeedDiac-25 leaderboard</li>
       <li><a href="#quality">Where the numbers come from</li>
       <li><a href="#conformance">Conformance methodology</li>
     </ul>
@@ -61,7 +62,7 @@
 
     <div class="sec" id="quality">
       <h2>Where the numbers come from</h2>
-      <p>Every metric above was produced by the benchmark&rsquo;s own evaluator on its full test set — Misraj&rsquo;s evaluator for SadeedDiac-25, SentenceBench for Persian homographs, the fixed 1,219-sentence Kaikki set for Thai — under published, zero-skip protocols. Methodology and run IDs live with each project&rsquo;s results file; nothing here is self-graded on a private split.</p>
+      <p>Every metric above was produced by the benchmark&rsquo;s own evaluator on its <em>full</em> test set — Misraj&rsquo;s evaluator for SadeedDiac-25 (all 1,200 paragraphs), SentenceBench for Persian homographs, the fixed 1,219-sentence Kaikki set for Thai — under published, zero-skip protocols. Methodology and run IDs live with each project&rsquo;s results file; nothing here is self-graded on a private split. Two standing disciplines, both learned the hard way: <strong>full-set only</strong> (an early Arabic student figure of 3.66% on the first 300 paragraphs measured 8.26% on the full set — subset figures are retracted on sight), and <strong>paired-bootstrap intervals</strong> on every claimed delta, because single-seed distillation gains below a point can be seed noise.</p>
     </div>
 
     <div class="sec" id="conformance">
